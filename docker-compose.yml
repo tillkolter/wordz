@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  web:
+    build: ./web
+    volumes:
+      - ${MORPHOLOGY_DATA_DIR:-./web/data}:/data
+      - ./web/docker-entrypoint.sh:/app/docker-entrypoint.sh
+    depends_on:
+      - redis
+
+  nginx:
+    image: nginx:1.13
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "3696:80"
+    depends_on:
+      - web
+
+  redis:
+    image: redis
+
+
